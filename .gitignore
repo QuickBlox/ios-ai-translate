@@ -1,0 +1,56 @@
+# Xcode
+# Files created by Xcode
+*.pbxuser
+*.xcuserstate
+*.xcworkspace/
+
+# Swift Package Manager
+# Build products
+.build/
+
+# Package Manager Dependencies
+# It's generally not a good idea to commit the entire 'Packages' directory
+# since it can be regenerated from the Package.swift manifest
+# Comment the following line if you want to include it in version control
+Packages/
+
+# Swift Package Manager Version
+# The current active version of the Swift Package Manager
+# Comment the following line if you want to include it in version control
+.pswiftpm
+
+# Miscellaneous
+# Temporary files
+*~
+.DS_Store
+*.swp
+*.tmp
+*~
+.idea/
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xccheckout
+*.moved-aside
+*.xcuserstate
+*.xcscmblueprint
+*.xcscheme
+
+# macOS
+# Build folder
+build/
+
+# iOS
+# Xcode build folder
+DerivedData/
+
+# Carthage
+# Carthage builds
+Carthage/Build/
+
+# SPM-generated
+.Package.resolved
+.build/
+
+# Integration Tests Config
+Config.swift
