@@ -5,6 +5,7 @@
 </p>
 
 </div>
+
 # QBAITranslate
 
 QBAITranslate is a Swift package that provides language management and translation functionalities, including integration with the OpenAI API.
