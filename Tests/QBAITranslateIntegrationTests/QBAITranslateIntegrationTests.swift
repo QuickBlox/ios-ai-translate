@@ -9,35 +9,38 @@ import XCTest
 @testable import QBAITranslate
 
 final class QBAITranslateIntegrationTests: XCTestCase {
-    override func tearDown() async throws {
-        QBAITranslate.settings.resetLanguage()
-        
-        try await super.tearDown()
-    }
-    
     func testHasText_translateByOpenAIWithTokenToSystemLanguage_returnAnswer() async {
         do {
-            let answers = try await
-            QBAITranslate.openAI(translate: Test.text,
-                                 secret: Config.openAIToken)
+            let settings = AISettings(apiKey: Config.openAIToken,
+                                      language: .ukrainian)
+            let clinicAnswers = try await QBAITranslate.translate(text: Test.clinicText,
+                                                                  history: Test.clinicMessages,
+                                                                  using: settings)
+            print(clinicAnswers)
+            XCTAssertFalse(clinicAnswers.isEmpty)
             
-            print(answers)
-            XCTAssertFalse(answers.isEmpty)
+            let supportAnswers = try await QBAITranslate.translate(text: Test.supportText,
+                                                                   history: Test.clinicMessages,
+                                                                   using: settings)
+            print(supportAnswers)
+            XCTAssertFalse(supportAnswers.isEmpty)
         } catch {
             XCTFail("Unexpected error type: \(error)")
         }
     }
     
-    func testHasText_translateByOpenAIWithTokenToCustomLanguge_returnAnswer() async {
+    func testHasWrongText_translateByOpenAIWithTokenToSystemLanguage_returnExeption() async {
         do {
-            QBAITranslate.settings.setCustom(language: .spanish)
-            let customLanguageAnswer = try await
-            QBAITranslate.openAI(translate: Test.text,
-                                 secret: Config.openAIToken)
-            
-            print(customLanguageAnswer)
+            let settings = AISettings(apiKey: Config.openAIToken,
+                                      language: .ukrainian)
+            let answers = try await QBAITranslate.translate(text: Test.wrongText,
+                                                                  history: Test.wrongMessages,
+                                                                  using: settings)
+            print(answers)
+            XCTFail("Expected error")
         } catch {
-            XCTFail("Unexpected error type: \(error)")
+            print(error)
+            XCTAssertNotNil(error)
         }
     }
     
@@ -45,15 +48,21 @@ final class QBAITranslateIntegrationTests: XCTestCase {
     // The repository is: https://github.com/QuickBlox/qb-ai-assistant-proxy-server
     func testHasText_translateByProxy_returnAnswer() async {
         do {
-            let answers = try await
-            QBAITranslate.openAI(translate: Test.text,
-                                 qbToken: Config.qbToken,
-                                 proxy: "http://localhost:3000")
-            print(answers)
-            XCTAssertFalse(answers.isEmpty)
+            let settings = AISettings(token: Config.qbToken,
+                                      serverPath: "http://localhost:3000",
+                                      language: .ukrainian)
+            
+            let clinicAnswers = try await QBAITranslate.translate(text: Test.clinicText,
+                                                            using: settings)
+            print(clinicAnswers)
+            XCTAssertFalse(clinicAnswers.isEmpty)
+            
+            let supportAnswers = try await QBAITranslate.translate(text: Test.supportText,
+                                                            using: settings)
+            print(supportAnswers)
+            XCTAssertFalse(supportAnswers.isEmpty)
         } catch {
             XCTFail("Unexpected error type: \(error)")
         }
     }
-    
 }

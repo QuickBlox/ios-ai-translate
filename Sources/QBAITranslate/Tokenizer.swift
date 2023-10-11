@@ -19,10 +19,51 @@ public protocol TokenizerProtocol {
      - Returns: The token count in the content string.
      */
     func parseTokensCount(from content: String) -> Int
+    
+    /**
+     Extracts a subset of messages based on the provided maximum token count.
+     
+     - Parameters:
+        - messages: An array of Message objects representing the chat history.
+        - maxCount: The maximum token count allowed for message processing.
+     
+     - Returns: A filtered array of Message objects containing a subset of messages.
+     */
+    func extract<M>(messages: [M]?,
+                    byTokenLimit maxCount: Int) -> [M] where M: Message
 }
 
 /// Represents the default implementation of TokenizerProtocol using CFStringTokenizer to tokenize messages.
 open class Tokenizer: TokenizerProtocol {
+    /**
+     Extracts a subset of messages based on the provided maximum token count.
+     
+     - Parameters:
+        - messages: An array of Message objects representing the chat history.
+        - maxCount: The maximum token count allowed for message processing.
+     
+     - Returns: A filtered array of Message objects containing a subset of messages.
+     */
+    public func extract<M>(messages: [M]?,
+                           byTokenLimit maxCount: Int) -> [M] where M: Message {
+        guard let messages = messages else { return [] }
+        if messages.isEmpty { return [] }
+        
+        var tokensCount = 0
+        var extractedMessages: [M] = []
+        
+        for message in messages.reversed() {
+            let messageContent = message.text
+            tokensCount += parseTokensCount(from: messageContent)
+            if tokensCount >= maxCount {
+                break
+            }
+            extractedMessages.append(message)
+        }
+        
+        return extractedMessages.reversed()
+    }
+    
     /**
      Parses the token count from the provided content using CFStringTokenizer.
      
