@@ -18,6 +18,7 @@ Packages/
 # The current active version of the Swift Package Manager
 # Comment the following line if you want to include it in version control
 .pswiftpm
+.swiftpm/xcode/xcuserdata
 
 # Miscellaneous
 # Temporary files
