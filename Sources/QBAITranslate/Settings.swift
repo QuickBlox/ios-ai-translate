@@ -94,7 +94,7 @@ public protocol Settings {
 public struct Default {
     public static var language: Language = .english
     public static var apiVersion: APIVersion = .v1
-    public static var model: Model = .gpt3_5_turbo
+    public static var model: Model = .gpt4o_mini
     public static var temperature: Float = 0.5
     public static var maxRequestTokens: Int = 3000
 }
@@ -209,13 +209,38 @@ public enum APIVersion: String {
 
 /// Represents the available GPT models for OpenAI.
 public enum Model: String {
+    @available(*, deprecated, message: "Use 'gpt-3.5-turbo-1106' instead.")
     case gpt3_5_turbo = "gpt-3.5-turbo"
+    @available(*, deprecated, message: "Use 'gpt-3.5-turbo-1106' instead.")
     case gpt3_5_turbo_0613 = "gpt-3.5-turbo-0613"
+    @available(*, deprecated, message: "Use 'gpt-3.5-turbo-1106' instead.")
     case gpt3_5_turbo_16k = "gpt-3.5-turbo-16k"
+    @available(*, deprecated, message: "Use 'gpt-3.5-turbo-1106' instead.")
     case gpt3_5_turbo_16k_0613 = "gpt-3.5-turbo-16k-0613"
     
+    @available(*, deprecated, message: "Use 'gpt-4-turbo' instead.")
     case gpt4 = "gpt-4"
+    @available(*, deprecated, message: "Use 'gpt-4-turbo' instead.")
     case gpt4_0613 = "gpt-4-0613"
+    @available(*, deprecated, message: "Use 'gpt-4-turbo' instead.")
     case gpt4_32k = "gpt-4-32k"
+    @available(*, deprecated, message: "Use 'gpt-4-turbo' instead.")
     case gpt4_32k_0613 = "gpt-4-32k-0613"
+    
+    case gpt3_5_turbo_1106 = "gpt-3.5-turbo-1106"
+    case gpt4_turbo = "gpt-4-turbo"
+    case gpt4o = "gpt-4o"
+    case gpt4o_mini = "gpt-4o-mini"
+    case o1_preview = "o1-preview"
+    case o1_mini = "o1-mini"
+}
+
+public extension Model {
+    init(customValue: String) {
+        self = Model(rawValue: customValue) ?? .custom(customValue)
+    }
+    
+    static func custom(_ value: String) -> Model {
+        return Model(rawValue: value) ?? .custom(value)
+    }
 }
